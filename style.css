@@ -1,0 +1,84 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300);
+*{
+		font-weight: lighter;
+    font-family: 'Open Sans', sans-serif;
+		padding:0;
+		margin:0;
+}
+div.wrapper{
+	text-align: center;
+	font-size: 10vh;
+	font-family: sans-serif;
+	overflow: hidden;
+}
+div.menu-active{
+	display: block;
+	width: 100%;
+	height:100%;
+}
+div.menu.start{
+	background: rgba(255,255,255,0.1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div.menu.start.button{
+	width: 35vh;
+	height:35vh;
+	padding:1vh;
+	border-radius: 100%;
+	font-size: 7vh;
+	overflow: hidden;
+	color:white;
+	background: rgba(0,0,0,0.5);
+	vertical-align: center;
+}
+
+div.game.wrapper{
+	width: 100%;
+	height:100%;
+	position: absolute;
+	top:0%;
+}
+div.game.timeline{
+	width: 100%;
+	height:15%;
+	background: #66a0ff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+div.game.combo-timeline{
+	width: 100%;
+	height:3%;
+	background: #5ebd65;
+	font-size: 3vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	width: 0%;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+div.game-question{
+	width: 100%;
+	height:35%;
+	margin-bottom: 1%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div.game-option{
+	transition: background 0.2s;
+	width: 100%;
+	height:11%;
+	background: #e8e8e8;
+	margin-bottom: 1%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
