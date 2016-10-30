@@ -73,7 +73,11 @@ Game.prototype.ai = function() {
     this.autoPilot = true;
     this.autoPilotInterval = setInterval(() => {
         var options = document.getElementsByClassName("game-option");
-        this.optionSelect(options[this.generateNumber(3)]);
+        var options = document.getElementsByClassName("game-option");
+        var number = this.generateNumber(3);
+        if(options[number].id != "dead"){
+          this.optionSelect(options[number]);
+        }
     }, 1500);
 }
 
