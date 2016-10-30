@@ -1,4 +1,3 @@
-
 function Game(e) {
     this.time = e.time;
     this.questionElement = e.questionElement;
@@ -14,6 +13,10 @@ function Game(e) {
     this.menu = e.menu;
     this.autoPilot = false;
     this.menu = null;
+    this.originalTime = e.time;
+    this.currentComboTimer = 0;
+    this.timeAddedOnWin = e.timeAddedOnWin;
+    this.level = 1;
 }
 
 Array.prototype.unique = function() {
@@ -28,87 +31,99 @@ Array.prototype.unique = function() {
     }
     return true;
 }
-
-Game.prototype.init = function() {
-    //Initialize originalTime for normalizing timeline
-    this.originalTime = this.time;
-    this.comboStart = this.originalTime;
-    this.comboMultiplier = 1;
-    this.comboDuration = 0;
+Game.prototype.reset = function() {
     this.autoPilot = false;
+    this.resetCombo();
     this.stopAI();
     this.stopGamePlay();
+    this.level = 1;
+}
+Game.prototype.resetCombo = function() {
+    this.comboStart = 0;
+    this.comboMultiplier = 0;
+    this.currentComboTimer = 0;
+
+}
+
+Game.prototype.init = function() {
+    this.reset();
+    this.time = this.originalTime;
     this.generateQuestion();
-    var thisObj = this;
     //Adding clicks onto game options
-    $(document).on('click', '.game-option', function() {
-        thisObj.optionSelect(this);
+    $(document).unbind().on('click', '.game-option', (e) => {
+        this.playSound("btn_click")
+        this.optionSelect(e.toElement);
+
     });
-    this.gamePlay = setInterval(function() {
-        if (thisObj.time >= 0) {
-            thisObj.timeHandler();
-            thisObj.comboTimeHandler();
-          }
-        else {
-              if(thisObj.autoPilot){
-              thisObj.time = thisObj.originalTime;
-              thisObj.init();
+    this.gamePlay = setInterval(() => {
+        if (this.time == null) {
+            this.stopGamePlay();
+            this.init();
+        }
+        if (this.time >= 0) {
+            this.timeHandler();
+            this.comboTimeHandler();
+        } else {
+            this.stopGamePlay();
+            this.time = 0; //Smooth animation
+            this.timeHandler();
+            if (this.autoPilot) {
+                this.time = this.originalTime;
+                this.init();
+                this.ai();
             } else {
-              thisObj.menu.generateEndMenu();
+                this.menu.generateEndMenu();
             }
-
-            //game ended
-
         }
     }, 1);
 };
 
 Game.prototype.ai = function() {
-  this.autoPilot = true;
-  var thisObj = this;
-  this.autoPilotInterval = setInterval(function() {
-    var options = document.getElementsByClassName("game-option");
-    thisObj.optionSelect(options[thisObj.generateNumber(3)]);
-  },1500);
+    this.autoPilot = true;
+    this.autoPilotInterval = setInterval(() => {
+        var options = document.getElementsByClassName("game-option");
+        this.optionSelect(options[this.generateNumber(3)]);
+    }, 1500);
 }
 
-Game.prototype.stopAI = function(e){
-  clearInterval(this.autoPilotInterval);
+Game.prototype.stopAI = function(e) {
+    this.autoPilot = false;
+    clearInterval(this.autoPilotInterval);
 }
 
-Game.prototype.stopGamePlay = function(e){
-  clearInterval(this.gamePlay);
+Game.prototype.stopGamePlay = function(e) {
+    clearInterval(this.gamePlay);
 }
 
 Game.prototype.timeHandler = function(e) {
     var actualWidth = (this.time / this.originalTime) * 100;
-    TweenLite.to(".timeline", 0.5, {
+    TweenLite.to(".timeline", 0.1, {
         width: actualWidth + "%"
     });
-    this.time--;
+    this.time -= this.level;
 }
 
 Game.prototype.comboTimeHandler = function() {
     //Error handling
-    if(this.currentComboTimer == null){
-      return;
+    if (this.currentComboTimer == null && this.comboStart <= 0) {
+        return;
     }
-    if(this.currentComboTimer === 0){
-      //Die animation
-      TweenLite.to(".combo-timeline", 0, {
-          background: this.loseColor
-      });
-      TweenLite.to(".combo-timeline", 0, {
-          opacity: 0,
-          delay:0.5
-      });
-      this.currentComboTimer = null;
-      return;
+    if (this.currentComboTimer == 0) {
+        //Die animation
+        TweenLite.to(".combo-timeline", 0, {
+            background: this.loseColor
+        });
+        TweenLite.to(".combo-timeline", 0, {
+            opacity: 0,
+            delay: 0.5
+        });
+        this.resetCombo();
+        return;
     }
     var comboEl = document.getElementsByClassName("combo-timeline")[0];
     comboEl.innerHTML = this.comboMultiplier + "X";
     var actualWidth = (this.currentComboTimer / this.comboDuration) * 100;
-    TweenLite.to(".combo-timeline", 0.5, {
+    TweenLite.to(".combo-timeline", 0.1, {
         width: actualWidth + "%",
         background: this.winColor,
         opacity: 1
@@ -179,13 +194,13 @@ Game.prototype.looseAnimation = function(e) {
         TweenLite.to(e, this.animationSpeed, {
             ease: Expo.easeOut,
             x: "100%",
-            delay:this.animationDelay
+            delay: this.animationDelay
         });
     } else {
         TweenLite.to(e, this.animationSpeed, {
             ease: Expo.easeOut,
             x: "-100%",
-            delay:this.animationDelay
+            delay: this.animationDelay
         });
     }
 }
@@ -203,45 +218,47 @@ Game.prototype.winAnimation = function(e) {
         delay: this.animationDelay
     });
 }
-Game.prototype.addTime = function(t){
-  if( (this.time+t) > this.originalTime){
-    this.time = this.originalTime;
-  } else {
-    this.time += t;
-  }
+Game.prototype.addTime = function(t) {
+    if ((this.time + t) > this.originalTime) {
+        this.time = this.originalTime;
+    } else {
+        this.time += t;
+    }
 }
-Game.prototype.calculatePoints = function(){
-  if(this.comboStart >= ( this.time - this.comboDuration ) ){
-    this.comboMultiplier++;
-    this.currentComboTimer = this.comboDuration;
-  } else {
-    this.currentComboTimer = 0;
-    this.comboStart = 0;
-    this.comboMultiplier = 1;
-  }
-  this.score += 1 * this.comboMultiplier;
-  this.addTime(300*this.comboMultiplier);
+Game.prototype.calculatePoints = function() {
+    if (Math.abs(this.comboStart - this.comboDuration) < this.time && this.comboStart > 0) {
+        this.playSound("combo");
+        this.comboMultiplier += 1;
+        this.currentComboTimer = this.comboDuration;
+    } else {
+        this.resetCombo();
+    }
+    this.score += 1 * this.comboMultiplier;
+    this.level += 0.1;
+    this.addTime(this.timeAddedOnWin * this.comboMultiplier); //Change to variable
 }
 Game.prototype.optionSelect = function(e) {
     var awnser = parseInt(e.innerHTML);
-    var myElement = this;
     if (awnser == this.options[this.rightOption]) {
-        //Add winning animation
         this.animationDelay = 0;
         this.comboStart = this.time;
         this.calculatePoints();
         this.winAnimation(e);
-        setTimeout(function() {
-            myElement.generateQuestion();
+        setTimeout(() => {
+            this.generateQuestion();
         }, 700);
         return;
     } else {
         this.animationDelay = 0.5;
         this.looseAnimation(e);
-        this.currentComboTimer = 0;
-        this.comboStart = 0;
-        this.comboMultiplier = 1;
-        this.addTime(-500)
+        this.addTime(-500);
+        this.resetCombo();
+    }
+
+}
+Game.prototype.playSound = function(e) {
+    if (!this.autoPilot) {
+        document.getElementById(e).play();
     }
 
 }

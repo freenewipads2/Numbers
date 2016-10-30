@@ -18,8 +18,9 @@ $(document).ready(function() {
     var numbersGame = new Game({
         time: 1000,
         comboMultiplier: 1, //Start value for comboMultiplier
-        comboDuration : 500,
+        comboDuration : 1000,
         animationSpeed : 0.5,
+        timeAddedOnWin : 300,
         questionElement: document.getElementsByClassName("game-question")[0],
         optionsElement: document.getElementsByClassName("game-options")[0],
         winColor: "#5ebd65",
@@ -33,7 +34,9 @@ $(document).ready(function() {
 });
 </script>
 
-
+<embed src="loop.mp3" autostart="true" loop="true" width="0" height="0"></embed>
+<audio id="btn_click" src="click.mp3"></audio>
+<audio id="combo" src="combo.wav"></audio>
 <div class="wrapper">
 <div class="game wrapper">
 <div class="game timeline"></div>
@@ -42,6 +45,6 @@ $(document).ready(function() {
 <div class="game-options"></div>
 
 </div>
-<div class="nav-menu">a
+<div class="nav-menu">
 </div>
 </div>

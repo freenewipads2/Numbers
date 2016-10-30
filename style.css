@@ -19,10 +19,8 @@ div.nav-menu{
 	align-items: center;
 	justify-content: center;
 	color: rgba(0,0,0,0.7);
-	background: rgba(255,255,255,0.9);
+	background: rgba(255,255,255,0.8);
 	color:black;
-}
-div.menu.start{
 }
 
 div.menu-start-button{
@@ -31,7 +29,42 @@ div.menu-start-button{
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-weight: bolder;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+	font-weight: bold;
+	background: rgba(23,234,23,0.5);
+
+	font-size: 5vh;
+}
+
+div.menu-start{
+
+}
+div.menu.stats.wrapper{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+		border: 2px solid black;
+}
+div.menu.stats{
+	width: 49vh;
+	font-size: 5vh;
+	display: inline-block;
+	margin-left: 1vh;
+
+}
+div.menu-end-button{
+	width: 100%;
+	margin-bottom: 1%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+	font-weight: bold;
+	background: rgba(234,23,23,0.5);
+
+	font-size: 5vh;
 }
 
 div.menu.headline{
@@ -39,8 +72,27 @@ div.menu.headline{
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	font-size: 7vh;
+	font-size: 10vh;
 	font-weight: lighter;
+
+}
+div.menu.brand{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	font-size: 10vh;
+
+
+
+}
+div.menu.score{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	font-size: 15vh;
+	font-weight: bold;
 }
 
 div.game.wrapper{
@@ -59,7 +111,9 @@ div.game.timeline{
 	justify-content: center;
 }
 div.game.combo-timeline{
+	transition: opacity 0.3s;
 	height:3%;
+	width: 0%;
 	background: #5ebd65;
 	font-size: 3vh;
 	display: flex;
