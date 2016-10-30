@@ -48,11 +48,9 @@ Menu.prototype.generateEndMenu = function() {
         "<div class='menu score'>" + this.gameObj.score + "</div>" +
         "<div class='menu headline'>POINTS</div>" +
         "<div class='menu-end-button'>PLAY AGAIN</div>" +
-        "<div class='menu stats wrapper'>"+
-        "<div class='menu stats'>LEVEL<br>"+this.gameObj.level+"</div>" +
-        "<div class='menu stats'>LEVEL<br>"+this.gameObj.level+"</div>" +
-        "</div></div>";
-    $(".menu-end-button").on("click", (e) => {
+        "</div>";
+    $(".menu-end-button").on("touchstart", (e) => {
+        this.gameObj.playSound("btn_click");
         this.reset();
         this.gameObj.init();
     });
@@ -63,11 +61,15 @@ Menu.prototype.generateStartMenu = function() {
     this.gameObj.ai();
     this.menuContainer.innerHTML =
         "<div class='menu-start'>" +
+        "<div class='menu-sound'></div>" +
         "<div class='menu brand'>NUMBERS</div>" +
         "<div class='menu-start-button'>START GAME</div>" +
         "</div>";
-    $(".menu-start-button").on("click", (e) => {
+    $(".menu-start-button").on("touchstart", (e) => {
         this.reset();
         this.gameObj.init();
+    });
+    $(".menu-sound").on("touchstart", (e) => {
+        this.gameObj.toggleSound();
     });
 }

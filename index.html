@@ -9,18 +9,36 @@
 <script src="js/game.js"></script>
 <script src="js/menu.js"></script>
 <meta content="minimum-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no" name="viewport" />
-<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <script>
 
+//Extend array prototype too see if arrays are unique
+Array.prototype.unique = function() {
+    var r = new Array();
+    o: for (var i = 0, n = this.length; i < n; i++) {
+        for (var x = 0, y = r.length; x < y; x++) {
+            if (r[x] == this[i]) {
+                return false;
+            }
+        }
+        r[r.length] = this[i];
+    }
+    return true;
+}
 
 $(document).ready(function() {
+    /*
+    Improvements : Dont use document.getELementsByClassName
+    */
+
     var numbersGame = new Game({
-        time: 1000,
+        time: 10000,
         comboMultiplier: 1, //Start value for comboMultiplier
-        comboDuration : 1000,
+        comboDuration : 1000, //How long combo timer will last
         animationSpeed : 0.5,
-        timeAddedOnWin : 300,
+        timeAddedOnWin : 300, //When you win its timeAddedOnWin * comboMultiplier
+        penaltyTime : 500, //When you select wrong option
         questionElement: document.getElementsByClassName("game-question")[0],
         optionsElement: document.getElementsByClassName("game-options")[0],
         winColor: "#5ebd65",
@@ -31,12 +49,18 @@ $(document).ready(function() {
       menuContainer : document.getElementsByClassName("nav-menu")[0],
       gameObj : numbersGame
     });
+    numbersGame.toggleSound();
 });
 </script>
 
-<embed src="loop.mp3" autostart="true" loop="true" width="0" height="0"></embed>
-<audio id="btn_click" src="click.mp3"></audio>
-<audio id="combo" src="combo.wav"></audio>
+<!-----------AUDIO, I really should implement this in a jsfile!---------->
+<audio id="background_music" autoplay="autoplay">
+   <source src="audio/loop.mp3" type="audio/mpeg" />
+ </audio>
+<audio id="btn_click" src="audio/click.mp3"></audio>
+<audio id="combo" src="audio/combo.wav"></audio>
+<audio id="combo_drop" src="audio/combo_drop.wav"></audio>
+
 <div class="wrapper">
 <div class="game wrapper">
 <div class="game timeline"></div>
