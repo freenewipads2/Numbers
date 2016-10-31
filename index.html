@@ -1,74 +1,61 @@
-
 <html>
+
 <head>
-  <title>Numbers</title>
-<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<meta content="yes" name="apple-mobile-web-app-capable" />
-<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
-<script src="js/game.js"></script>
-<script src="js/menu.js"></script>
-<meta content="minimum-scale=1.0, width=device-width, maximum-scale=1.0, user-scalable=no" name="viewport" />
-<link rel="stylesheet" type="text/css" href="css/style.css">
+    <title>Numbers</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
+    <script src="js/array.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/menu.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.min.css">
 </head>
 <script>
+    $(document).ready(function() {
+        /*
+        Improvements : Dont use document.getELementsByClassName
+        */
 
-//Extend array prototype too see if arrays are unique
-Array.prototype.unique = function() {
-    var r = new Array();
-    o: for (var i = 0, n = this.length; i < n; i++) {
-        for (var x = 0, y = r.length; x < y; x++) {
-            if (r[x] == this[i]) {
-                return false;
-            }
-        }
-        r[r.length] = this[i];
-    }
-    return true;
-}
+        var numbersGame = new Game({
+            time: 10000,
+            comboMultiplier: 1, //Start value for comboMultiplier
+            comboDuration: 1000, //How long combo timer will last
+            animationSpeed: 0.5,
+            timeAddedOnWin: 300, //When you win its timeAddedOnWin * comboMultiplier
+            penaltyTime: 500, //When you select wrong option
+            questionElement: document.getElementsByClassName("game-question")[0],
+            optionsElement: document.getElementsByClassName("game-options")[0],
+            winColor: "#5ebd65",
+            loseColor: "#f79480"
+        });
 
-$(document).ready(function() {
-    /*
-    Improvements : Dont use document.getELementsByClassName
-    */
-
-    var numbersGame = new Game({
-        time: 10000,
-        comboMultiplier: 1, //Start value for comboMultiplier
-        comboDuration : 1000, //How long combo timer will last
-        animationSpeed : 0.5,
-        timeAddedOnWin : 300, //When you win its timeAddedOnWin * comboMultiplier
-        penaltyTime : 500, //When you select wrong option
-        questionElement: document.getElementsByClassName("game-question")[0],
-        optionsElement: document.getElementsByClassName("game-options")[0],
-        winColor: "#5ebd65",
-        loseColor : "#f79480"
+        var numbersMenu = new Menu({
+            menuContainer: document.getElementsByClassName("nav-menu")[0],
+            gameObj: numbersGame
+        });
+        numbersGame.toggleSound();
     });
-
-    var numbersMenu = new Menu({
-      menuContainer : document.getElementsByClassName("nav-menu")[0],
-      gameObj : numbersGame
-    });
-    numbersGame.toggleSound();
-});
 </script>
 
 <!-----------AUDIO, I really should implement this in a jsfile!---------->
 <audio id="background_music" autoplay="autoplay">
-   <source src="audio/loop.mp3" type="audio/mpeg" />
- </audio>
+    <source src="audio/loop.mp3" type="audio/mpeg" />
+</audio>
 <audio id="btn_click" src="audio/click.mp3"></audio>
 <audio id="combo" src="audio/combo.wav"></audio>
 <audio id="combo_drop" src="audio/combo_drop.wav"></audio>
 
 <div class="wrapper">
-<div class="game wrapper">
-<div class="game timeline"></div>
-<div class="game combo-timeline"></div>
-<div class="game-question"></div>
-<div class="game-options"></div>
+    <div class="game wrapper">
+        <div class="game timeline"></div>
+        <div class="game combo-timeline"></div>
+        <div class="game-question"></div>
+        <div class="game-options"></div>
 
+    </div>
+    <div class="nav-menu">
+    </div>
 </div>
-<div class="nav-menu">
-</div>
-</div>
+
+</html>

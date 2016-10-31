@@ -26,6 +26,7 @@ Game.prototype.reset = function() {
     this.stopAI();
     this.stopGamePlay();
     this.level = 1;
+    this.score = 0;
 }
 Game.prototype.resetCombo = function() {
     this.comboStart = 0;
@@ -42,7 +43,6 @@ Game.prototype.init = function() {
     //Adding clicks onto game options
     $(document).unbind().on('touchstart', '.game-option', (e) => {
         this.playSound("btn_click");
-        console.log(e);
         this.optionSelect(e.target);
 
     });
