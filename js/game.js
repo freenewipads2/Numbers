@@ -42,8 +42,11 @@ Game.prototype.init = function() {
     this.generateQuestion();
     //Adding clicks onto game options
     $(document).unbind().on('touchstart', '.game-option', (e) => {
+        if(e.target.id != "dead"){
         this.playSound("btn_click");
         this.optionSelect(e.target);
+        e.target.id = "dead"; //Make div non clickable again
+        }
 
     });
     this.gamePlay = setInterval(() => {
@@ -181,7 +184,6 @@ Game.prototype.looseAnimation = function(e) {
         return;
     }
     var side = this.generateNumber(2);
-    e.id = "dead";
     TweenLite.to(e, 0.2, {
         ease: Sine.easeOut,
         background: this.loseColor,
